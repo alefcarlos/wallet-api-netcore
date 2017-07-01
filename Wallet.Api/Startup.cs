@@ -20,7 +20,7 @@ namespace Wallet.Api
     using Api.Swagger;
     using AutoMapper;
     using Wallet.Api.Models.VM;
-    using Wallet.Api.MapperProfiles;
+    using Wallet.Api.Mapper.MapperProfiles;
 
     public class Startup
     {

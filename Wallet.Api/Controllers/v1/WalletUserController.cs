@@ -58,9 +58,11 @@ namespace Wallet.Api.Controllers.v1
         {
             try
             {
-                var entity = await _repository.GetAsync(id);
+                var entity = await (_repository as IWalletUserRepository).GetInfoAsync(id);
 
-                return ReturnOk(_mapper.Map<WalletUser, WalletUserVM>(entity));
+                var entityVM = _mapper.Map<WalletUser, WalletUserVM>(entity);
+
+                return ReturnOk(entityVM);
             }
             catch (RecordNotFoundException ex)
             {

@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-
+using System.Collections.Generic;
 
 namespace Wallet.Domain.Models
 {
@@ -51,5 +51,7 @@ namespace Wallet.Domain.Models
         /// </summary>
         [Required]
         public decimal Limit { get; set; }
+
+        public IEnumerable<CardTransaction> Transactions { get; set; }
     }
 }

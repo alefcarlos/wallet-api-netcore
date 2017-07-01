@@ -1,19 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
+using Wallet.Domain.Models;
 
-namespace Wallet.Domain.Models
+namespace Wallet.Api.Models.VM
 {
-    using Domain.Core.Models;
-
-    public class CardTransaction : ModelBase
+    public class CardTransactionVM
     {
-        [Key]
         public int CardTransactionId { get; set; }
-
-        public Card Card { get; set; }
-        public int CardId { get; set; }
-
+        
         [Required]
         public decimal Value { get; set; }
 
@@ -24,12 +18,5 @@ namespace Wallet.Domain.Models
         public DateTime Date { get; set; }
 
         public ECardTransactionType Type { get; set; } = ECardTransactionType.Purchase;
-    }
-
-    public enum ECardTransactionType
-    {
-        Purchase,
-
-        ReleaseCredit,
     }
 }

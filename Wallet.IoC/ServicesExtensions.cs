@@ -21,6 +21,7 @@ namespace Wallet.IoC
             //Scoped lifetime services are created once per request.
             services.AddScoped<IWalletUserRepository, WalletUserRepository>();
             services.AddScoped<ICardRepository, CardRepository>();
+            services.AddScoped<ICardTrasactionRepository, CardTransactionRepository>();
         }
 
         /// <summary>

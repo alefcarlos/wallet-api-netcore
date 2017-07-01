@@ -21,6 +21,8 @@ namespace Wallet.Infra.Data
         /// </summary>
         public DbSet<Card> Cards { get; set; }
 
+        public DbSet<CardTransaction> CardTransactions { get; set; }
+
         public WalletContext(DbContextOptions<WalletContext> options) :
             base(options)
         {

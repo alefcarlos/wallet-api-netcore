@@ -18,6 +18,7 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// </summary>
         /// <param name="id">WallerUserId</param>
         /// <returns>Returns a card list.</returns>
-        Task<IEnumerable<Card>> GetByUserId(int id);
+        Task<List<Card>> GetByUserId(int id);
+        Task<List<Card>> GetAllAvailableLimitAsync();
     }
 }

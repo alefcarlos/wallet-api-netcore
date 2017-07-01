@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Wallet.Api.Models.VM
@@ -15,8 +16,10 @@ namespace Wallet.Api.Models.VM
         //MM/YY
         public string ExpirationDateString => ExpirationDate.ToString("dd/MM");
 
-        public int CCV { get; set; }
+        public string CCV { get; set; }
 
         public decimal Limit { get; set; }
+
+        public List<CardTransactionVM> TransactionsInfo {get;set;} = new List<CardTransactionVM>();
     }
 }
