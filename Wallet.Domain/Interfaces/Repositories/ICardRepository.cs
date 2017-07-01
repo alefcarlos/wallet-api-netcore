@@ -14,11 +14,16 @@ namespace Wallet.Domain.Interfaces.Repositories
     public interface ICardRepository : IRepositoryBase<Card>
     {
         /// <summary>
-        /// Gets all cards by user
+        /// Gets all cards by logged user
         /// </summary>
-        /// <param name="id">WallerUserId</param>
         /// <returns>Returns a card list.</returns>
-        Task<List<Card>> GetByUserId(int id);
+        Task<List<Card>> GetByLoggedUser();
         Task<List<Card>> GetAllAvailableLimitAsync();
+
+        /// <summary>
+        /// Gets the cards's total limit 
+        /// </summary>
+        /// <returns>Return the total limit for this user</returns>
+        Task<decimal> GetSumLimit();
     }
 }

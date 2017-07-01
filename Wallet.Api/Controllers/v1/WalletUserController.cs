@@ -52,19 +52,19 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Gets an specifc user by id.
+        /// Gets logged user's complete infos
         /// </summary>
         /// <returns>Returns an specific user.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("info")]
         [ProducesResponseType(typeof(ApiResult<WalletUserVM>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ProducesResponseType(typeof(ApiResult<string>), 404)]
         [ValidateApiUser]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetInfo()
         {
             try
             {
-                var entity = await (_repository as IWalletUserRepository).GetInfoAsync(id);
+                var entity = await (_repository as IWalletUserRepository).GetInfoAsync();
 
                 var entityVM = _mapper.Map<WalletUser, WalletUserVM>(entity);
 
@@ -158,6 +158,29 @@ namespace Wallet.Api.Controllers.v1
             catch (RecordNotFoundException ex)
             {
                 return ReturnNotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return ReturnError(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Updates the logged user's real limit
+        /// </summary>
+        /// <returns>Returns</returns>
+        [HttpPut("reallimit")]
+        [ValidateModel]
+        [ProducesResponseType(typeof(ApiResult<string>), 200)]
+        [ProducesResponseType(typeof(ApiResult<string>), 400)]
+        [ValidateApiUser]
+        public async Task<IActionResult> UpdatedRealLimit([FromBody]decimal value)
+        {
+            try
+            {
+                await (_repository as IWalletUserRepository).UpdatedRealLimit(value);
+
+                return ReturnOk("Alterado com sucesso.");
             }
             catch (Exception ex)
             {

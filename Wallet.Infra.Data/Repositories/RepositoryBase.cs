@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging; 
 
 namespace Wallet.Infra.Data.Repositories
 {
@@ -116,10 +116,10 @@ namespace Wallet.Infra.Data.Repositories
 
         public virtual bool Exists(int ids) => GetAsync(ids) != null;
 
-        public int ExecuteQuery(string sql, params object[] paramaters)
+        public int ExecuteQueryAsync(string sql, params object[] paramaters)
         {
-            // var result = dataContext.Database.ExecuteSqlCommand(sql, paramaters);
-            // dataContext.SaveChanges();
+            // var result = await dataContext.Database.ExecuteSqlCommand(sql, paramaters);
+            // await dataContext.SaveChangesAsync();
 
             // return result;
             return -1;

@@ -65,6 +65,6 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// <returns>Returns true if the record existis, otherwise false</returns>
         bool Exists(int id);
 
-        int ExecuteQuery(string sql, params object[] paramaters);
+        int ExecuteQueryAsync(string sql, params object[] paramaters);
     }
 }

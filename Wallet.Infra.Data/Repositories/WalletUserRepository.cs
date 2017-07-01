@@ -9,12 +9,22 @@ namespace Wallet.Infra.Data.Repositories
     using Domain.Interfaces.Repositories;
     using Domain.Core.Exceptions;
     using System.Linq;
+    using Wallet.Domain.Interfaces.User;
 
     public class WalletUserRepository : RepositoryBase<WalletUser>, IWalletUserRepository
     {
-        public WalletUserRepository(WalletContext context, ILogger<WalletUserRepository> logger)
+        //Allow us to handle the logged user 
+        private readonly IUserManagment _userManagment;
+
+        private readonly ICardRepository _cardRepository;
+        public WalletUserRepository(WalletContext context,
+                                    ILogger<WalletUserRepository> logger,
+                                    IUserManagment userManagment,
+                                    ICardRepository cardRepository)
             : base(context, logger)
         {
+            _userManagment = userManagment;
+            _cardRepository = cardRepository;
         }
 
         public override void BeforeAdd(WalletUser entity)
@@ -27,14 +37,13 @@ namespace Wallet.Infra.Data.Repositories
         /// <summary>
         /// Gets the wallet informar from an user 
         /// </summary>
-        /// <param name="userId">UserId requested</param>
         /// <returns>Returns cards and transactions from wallet</returns>
-        public async Task<WalletUser> GetInfoAsync(int userId)
+        public async Task<WalletUser> GetInfoAsync()
         {
             var entity = await Query()
                             .Include(card => card.Cards)
                                 .ThenInclude(t => t.Transactions)
-                            .FirstOrDefaultAsync(x => x.WalletUserId == userId);
+                            .FirstOrDefaultAsync(x => x.WalletUserId == _userManagment.User.WalletUserId);
 
             if (entity == null)
                 throw new RecordNotFoundException();
@@ -61,6 +70,27 @@ namespace Wallet.Infra.Data.Repositories
             return entity;
         }
 
+        /// <summary>
+        /// Updates the user's real limit
+        /// </summary>
+        public async Task UpdatedRealLimit(decimal value)
+        {
+            var limit = await _cardRepository.GetSumLimit();
+
+            if (value > limit)
+                throw new Exception($"The real limit must be less or equals than {limit.ToString("C")}");
+
+            var entity = await GetAsync(_userManagment.User.WalletUserId);
+            entity.RealLimit = value;
+
+            await UpdateAsync(entity);
+        }
+
+        /// <summary>
+        /// Validates if a token is valid
+        /// </summary>
+        /// <param name="code">Guid to validade</param>
+        /// <returns>Returns the related user.</returns>
         public WalletUser ValidadeToken(string code)
         {
             Guid _guid;
@@ -71,7 +101,7 @@ namespace Wallet.Infra.Data.Repositories
             if (!success)
                 throw new RecordNotFoundException();
 
-            var model = Query().FirstOrDefault(x => x.Code == _guid);
+            var model = Query().AsNoTracking().FirstOrDefault(x => x.Code == _guid);
 
             if (model == null)
                 throw new RecordNotFoundException();

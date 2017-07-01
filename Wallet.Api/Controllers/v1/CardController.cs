@@ -90,7 +90,6 @@ namespace Wallet.Api.Controllers.v1
         {
             try
             {
-                entity.WalletUserId =  _userManagment.User.WalletUserId;
                 await _repository.AddAsync(entity);
 
                 return ReturnOk("Incluído com sucesso");
@@ -103,7 +102,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Get all user's cards
+        /// Get all logged user's cards
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpGet("user")]
@@ -114,7 +113,7 @@ namespace Wallet.Api.Controllers.v1
         {
             try
             {
-                var list = await (_repository as ICardRepository).GetByUserId(_userManagment.User.WalletUserId);
+                var list = await (_repository as ICardRepository).GetByLoggedUser();
 
                 return ReturnOk(_mapper.Map<IEnumerable<Card>, IEnumerable<CardVM>>(list));
             }

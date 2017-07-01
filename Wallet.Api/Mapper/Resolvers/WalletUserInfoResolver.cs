@@ -16,7 +16,8 @@ namespace Wallet.Api.Mapper.Resolvers
             {
                 WalletUserId = source.WalletUserId,
                 Name = source.Name,
-                Email = source.Email
+                Email = source.Email,
+                RealLimit = source.RealLimit
             };
 
             // Cards info

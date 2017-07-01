@@ -9,29 +9,46 @@ namespace Wallet.Infra.Data.Repositories
 {
     using Domain.Models;
     using Domain.Interfaces.Repositories;
-
+    using Wallet.Domain.Interfaces.User;
 
     public class CardRepository : RepositoryBase<Card>, ICardRepository
     {
-        public CardRepository(WalletContext context, ILogger<CardRepository> logger)
+        //Allow us to handle the logged user 
+        private readonly IUserManagment _userManagment;
+
+        public CardRepository(WalletContext context,
+                            ILogger<CardRepository> logger,
+                            IUserManagment userManagment)
+
             : base(context, logger)
         {
+            _userManagment = userManagment;
         }
 
         /// <summary>
-        /// Gets all cards by user
+        /// Gets all cards by logged user
         /// </summary>
-        /// <param name="id">WallerUserId</param>
         /// <returns>Returns a card list.</returns>
-        public async Task<List<Card>> GetByUserId(int id)
+        public async Task<List<Card>> GetByLoggedUser()
         {
-            var result = await Query().Where(x => x.WalletUserId == id).ToListAsync();
+            var result = await Query()
+                                .Where(x => x.WalletUserId == _userManagment.User.WalletUserId)
+                                .ToListAsync();
 
             return result;
         }
 
+        /// <summary>
+        /// Gets the cards's total limit 
+        /// </summary>
+        /// <returns>Return the total limit for this user</returns>
+        public async Task<decimal> GetSumLimit() => await Query().SumAsync(x => x.Limit);
+
         public override void BeforeAdd(Card entity)
         {
+            //Adds owner user.
+            entity.WalletUserId = _userManagment.User.WalletUserId;
+
             ApplyCommomValidations(entity);
 
             //We can    

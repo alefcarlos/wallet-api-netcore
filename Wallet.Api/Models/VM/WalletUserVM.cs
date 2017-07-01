@@ -7,19 +7,16 @@ namespace Wallet.Api.Models.VM
     {
         public int WalletUserId { get; set; }
 
-        /// <summary>
-        /// Nome do usuário
-        /// </summary>
         [Required,
         MaxLength(20)]
         public string Name { get; set; }
 
-        /// <summary>
-        /// E-mail do usuário
-        /// </summary>
         [Required,
         MaxLength(100)]
         public string Email { get; set; }
+
+
+        public decimal RealLimit { get; set; } = 0;
 
         public List<CardVM> CardsInfo { get; set; } = new List<CardVM>();
     }

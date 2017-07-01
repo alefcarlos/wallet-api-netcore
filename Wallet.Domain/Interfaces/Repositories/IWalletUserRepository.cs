@@ -13,9 +13,8 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// <summary>
         /// Gets the wallet informar from an user 
         /// </summary>
-        /// <param name="userId">UserId requested</param>
         /// <returns>Returns cards and transactions from wallet</returns>
-        Task<WalletUser> GetInfoAsync(int userId);
+        Task<WalletUser> GetInfoAsync();
 
         /// <summary>
         /// It logins an user.
@@ -25,5 +24,6 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// <returns>Returns the user entity</returns>
         Task<WalletUser> Login(string email, string password);
         WalletUser ValidadeToken(string value);
+        Task UpdatedRealLimit(decimal value);
     }
 }
