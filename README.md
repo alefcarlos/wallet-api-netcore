@@ -8,6 +8,12 @@ You have to install de .net Core SDK
 https://www.microsoft.com/net/download/core
 ~~~~
 
+You mus configure your connection string at Wallet.Api.appsetings.json
+
+~~~~
+default value is Server=localhost;Database=Wallet;Trusted_Connection=True;MultipleActiveResultSets=true
+~~~~
+
 Open the api folder
 
 ~~~
@@ -20,7 +26,7 @@ First, you need to restore the packages
 dotnet restore
 ~~~~
 
-After that, compile
+After that, compile ir
 
 ~~~~
 dotnet build
@@ -32,7 +38,7 @@ dotnet build
 dotnet run
 ~~~~
 
-A local server will be available
+The ef core will create a blank database for you called Wallet and a local server will be available to make requests
 
 ~~~~
 default: localhost:5000
