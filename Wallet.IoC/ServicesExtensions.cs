@@ -6,6 +6,8 @@ namespace Wallet.IoC
 {
     using Infra.Data;
     using Infra.Data.Repositories;
+    using Wallet.Domain;
+    using Wallet.Domain.Interfaces.User;
 
     /// <summary>
     /// Class to use in Startup.cs
@@ -22,6 +24,11 @@ namespace Wallet.IoC
             services.AddScoped<IWalletUserRepository, WalletUserRepository>();
             services.AddScoped<ICardRepository, CardRepository>();
             services.AddScoped<ICardTrasactionRepository, CardTransactionRepository>();
+        }
+
+        public static void AddUser(this IServiceCollection services)
+        {
+            services.AddScoped<IUserManagment, UserManagment>();
         }
 
         /// <summary>

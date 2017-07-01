@@ -21,6 +21,7 @@ namespace Wallet.Api
     using AutoMapper;
     using Wallet.Api.Models.VM;
     using Wallet.Api.Mapper.MapperProfiles;
+    using Wallet.Api.Models;
 
     public class Startup
     {
@@ -29,7 +30,10 @@ namespace Wallet.Api
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                // .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+
+                //Loads custom options for api
+                .AddJsonFile("apisettings.json")
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -39,6 +43,12 @@ namespace Wallet.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Required to use the Options<T> pattern
+            services.AddOptions();
+
+            // Add settings from configuration
+            services.Configure<ApiSettings>(Configuration);
+
             //Add EF
             services.AddEF();
 
@@ -74,6 +84,9 @@ namespace Wallet.Api
 
             // Add Repositories
             services.AddRepositories();
+
+            //Add user managment
+            services.AddUser();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

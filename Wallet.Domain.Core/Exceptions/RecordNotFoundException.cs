@@ -9,5 +9,7 @@ namespace Wallet.Domain.Core.Exceptions
     public class RecordNotFoundException : Exception
     {
         public RecordNotFoundException() : base("Registro não encontrado") { }
+
+        public RecordNotFoundException(string msg) : base(msg) { }
     }
 }

@@ -17,7 +17,7 @@ namespace Wallet.Api.Controllers.v1
 
 
     /// <summary>
-    /// User controller
+    /// User/Wallet controller
     /// </summary>
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/users")]
@@ -31,15 +31,21 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Get all Users.
+        /// Gets all Users.
         /// It requires admin permission.
         /// </summary>
         /// <returns>Returns all users.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<WalletUserVM>>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
+        [ValidateApiUser]
+        [ValidateApiUserRole(EUserManagmentRole.Admin)]
         public async Task<IActionResult> Get()
         {
+            _logger.LogInformation("teste");
+            _logger.LogDebug("teste");
+            _logger.LogError("teste");
+
             var list = await _repository.GetAllAsync();
 
             return ReturnOk(_mapper.Map<IEnumerable<WalletUser>, IEnumerable<WalletUserVM>>(list));
@@ -47,13 +53,13 @@ namespace Wallet.Api.Controllers.v1
 
         /// <summary>
         /// Get an specifc user by id.
-        /// It requires admin permission.
         /// </summary>
         /// <returns>Returns an specific user.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResult<WalletUserVM>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ProducesResponseType(typeof(ApiResult<string>), 404)]
+        [ValidateApiUser]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -74,13 +80,12 @@ namespace Wallet.Api.Controllers.v1
             }
         }
 
-        // /// <summary>
-        // /// Add an user.
-        // /// It requires admin permission.
-        // /// </summary>
-        // /// <returns>Returns Ok/Error.</returns>
+        /// <summary>
+        /// Add an user.
+        /// </summary>
+        /// <returns>Returns Ok/Error.</returns>
         [HttpPost]
-        // [ValidateModel]
+        [ValidateModel]
         [ProducesResponseType(typeof(ApiResult<string>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
         public async Task<IActionResult> Post([FromBody]WalletUser entity)
@@ -115,14 +120,40 @@ namespace Wallet.Api.Controllers.v1
         // // }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> Delete(int id)
+        // {
+        //     try
+        //     {
+        //         await _repository.DeleteAsync(id);
+
+        //         return ReturnOk("Deletado com sucesso");
+        //     }
+        //     catch (RecordNotFoundException ex)
+        //     {
+        //         return ReturnNotFound(ex.Message);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return ReturnError(ex.Message);
+        //     }
+        // }
+
+        /// <summary>
+        /// User login
+        /// </summary>
+        /// <returns>Returns the user token.</returns>
+        [HttpPost("login")]
+        [ValidateModel]
+        [ProducesResponseType(typeof(ApiResult<Guid>), 200)]
+        [ProducesResponseType(typeof(ApiResult<string>), 400)]
+        public async Task<IActionResult> Login([FromBody]LoginVM login)
         {
             try
             {
-                await _repository.DeleteAsync(id);
+                var user = await (_repository as IWalletUserRepository).Login(login.Email, login.Password);
 
-                return ReturnOk("Deletado com sucesso");
+                return ReturnOk(user.Code);
             }
             catch (RecordNotFoundException ex)
             {

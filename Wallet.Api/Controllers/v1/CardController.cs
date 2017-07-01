@@ -14,30 +14,37 @@ namespace Wallet.Api.Controllers.v1
     using Domain.Core.Exceptions;
     using Wallet.Api.Models;
     using Wallet.Api.Models.VM;
+    using Wallet.Domain.Interfaces.User;
 
 
     /// <summary>
-    /// User controller
+    /// Card controller
     /// </summary>
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cards")]
+    [ValidateApiUser]
     public class CardController : ControllerBase<Card>
     {
+        private readonly IUserManagment _userManagment;
+        
         public CardController(ICardRepository repo,
                                     ILogger<CardController> logger,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    IUserManagment userManagment)
             : base(repo, logger, mapper)
         {
+            _userManagment = userManagment;
         }
 
         /// <summary>
-        /// Get all Users.
+        /// Gets all cards.
         /// It requires admin permission.
         /// </summary>
         /// <returns>Returns all users.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<CardVM>>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
+        [ValidateApiUserRole(EUserManagmentRole.Admin)]
         public async Task<IActionResult> Get()
         {
             var list = await _repository.GetAllAsync();
@@ -46,11 +53,10 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Get an specifc user by id.
-        /// It requires admin permission.
+        /// Gets an specifc card by id.
         /// </summary>
         /// <returns>Returns an specific user.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(ApiResult<CardVM>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ProducesResponseType(typeof(ApiResult<string>), 404)]
@@ -73,8 +79,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Add an user.
-        /// It requires admin permission.
+        /// Adds a card for an user.
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost]
@@ -85,6 +90,7 @@ namespace Wallet.Api.Controllers.v1
         {
             try
             {
+                entity.WalletUserId =  _userManagment.User.WalletUserId;
                 await _repository.AddAsync(entity);
 
                 return ReturnOk("Incluído com sucesso");
@@ -96,15 +102,19 @@ namespace Wallet.Api.Controllers.v1
 
         }
 
-        [HttpGet("user/{id:int}")]
+        /// <summary>
+        /// Get all user's cards
+        /// </summary>
+        /// <returns>Returns Ok/Error.</returns>
+        [HttpGet("user")]
         [ProducesResponseType(typeof(ApiResult<CardVM>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ProducesResponseType(typeof(ApiResult<string>), 404)]
-        public async Task<IActionResult> GetByUserId(int id)
+        public async Task<IActionResult> GetByUserId()
         {
             try
             {
-                var list = await (_repository as ICardRepository).GetByUserId(id);
+                var list = await (_repository as ICardRepository).GetByUserId(_userManagment.User.WalletUserId);
 
                 return ReturnOk(_mapper.Map<IEnumerable<Card>, IEnumerable<CardVM>>(list));
             }
@@ -118,23 +128,23 @@ namespace Wallet.Api.Controllers.v1
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            try
-            {
-                await _repository.DeleteAsync(id);
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> Delete(int id)
+        // {
+        //     try
+        //     {
+        //         await _repository.DeleteAsync(id);
 
-                return ReturnOk("Deletado com sucesso");
-            }
-            catch (RecordNotFoundException ex)
-            {
-                return ReturnNotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return ReturnError(ex.Message);
-            }
-        }
+        //         return ReturnOk("Deletado com sucesso");
+        //     }
+        //     catch (RecordNotFoundException ex)
+        //     {
+        //         return ReturnNotFound(ex.Message);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return ReturnError(ex.Message);
+        //     }
+        // }
     }
 }

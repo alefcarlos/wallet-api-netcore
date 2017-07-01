@@ -34,7 +34,7 @@ namespace Wallet.Api.Controllers.v1
         /// Get all transactions from a card.
         /// </summary>
         /// <returns>Returns all users.</returns>
-        [HttpGet("{cardId:int}/transaction")]
+        [HttpGet("{cardId:int}/transactions")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<CardTransactionVM>>), 200)]
         [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ProducesResponseType(typeof(ApiResult<string>), 404)]
