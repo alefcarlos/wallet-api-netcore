@@ -52,7 +52,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Get an specifc user by id.
+        /// Gets an specifc user by id.
         /// </summary>
         /// <returns>Returns an specific user.</returns>
         [HttpGet("{id}")]
@@ -81,7 +81,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Add an user.
+        /// Adds an user.
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost]

@@ -31,7 +31,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Get all transactions from a card.
+        /// Gets all transactions from a card.
         /// </summary>
         /// <returns>Returns all users.</returns>
         [HttpGet("{cardId:int}/transactions")]
@@ -57,7 +57,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Add a card transaction.
+        /// Adds a card transaction.
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost("transaction")]
