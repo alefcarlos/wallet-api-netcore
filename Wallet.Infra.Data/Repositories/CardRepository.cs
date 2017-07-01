@@ -13,16 +13,12 @@ namespace Wallet.Infra.Data.Repositories
 
     public class CardRepository : RepositoryBase<Card>, ICardRepository
     {
-        //Allow us to handle the logged user 
-        private readonly IUserManagment _userManagment;
-
         public CardRepository(WalletContext context,
                             ILogger<CardRepository> logger,
                             IUserManagment userManagment)
 
-            : base(context, logger)
+            : base(context, logger, userManagment)
         {
-            _userManagment = userManagment;
         }
 
         /// <summary>
@@ -82,6 +78,13 @@ namespace Wallet.Infra.Data.Repositories
                                 .OrderByDescending(x => x.DueDate)
                                 .ThenBy(x => x.Limit)
                                 .ToListAsync();
+        }
+
+        public void SubtractLimit(int cardId, decimal value)
+        {
+            var sql = "UPDATE Cards SET Limit = (Limit - {0}) WHERE CardId = {1}";
+
+            ExecuteQuery(sql, value, cardId);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Wallet.Api.Models.VM
 {
@@ -15,8 +16,9 @@ namespace Wallet.Api.Models.VM
         MaxLength(100)]
         public string Email { get; set; }
 
-
         public decimal RealLimit { get; set; } = 0;
+
+        public decimal CardsLimit => CardsInfo.Sum(x => x.Limit);
 
         public List<CardVM> CardsInfo { get; set; } = new List<CardVM>();
     }

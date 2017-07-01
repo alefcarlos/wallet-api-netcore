@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Wallet.Domain.Core.Models
 {
@@ -12,12 +13,13 @@ namespace Wallet.Domain.Core.Models
         /// Gets or sets created date
         /// It's required
         /// </summary>
-        [Required]
+        [Required, Column(TypeName = "datetime")]
         public DateTime CreatedDate { get; set; }
         
         /// <summary>
         /// Gets or sets updated date
         /// </summary>
+        [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
     }
 }

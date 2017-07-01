@@ -1,0 +1,1 @@
+dotnet ef database drop --startup-project ../Wallet.Api/

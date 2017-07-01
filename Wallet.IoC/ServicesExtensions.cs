@@ -6,6 +6,7 @@ namespace Wallet.IoC
 {
     using Infra.Data;
     using Infra.Data.Repositories;
+    using Microsoft.Extensions.Configuration;
     using Wallet.Domain;
     using Wallet.Domain.Interfaces.User;
 
@@ -35,13 +36,15 @@ namespace Wallet.IoC
         /// It injects the WalletContext in container.
         /// </summary>
         /// <param name="services"></param>
-        public static void AddEF(this IServiceCollection services)
+        public static void AddEF(this IServiceCollection services, IConfigurationRoot Configuration)
         {
             services.AddEntityFrameworkInMemoryDatabase()
                 .AddDbContext<WalletContext>(options =>
                 {
                     //Just for tests
-                    options.UseInMemoryDatabase();
+                    // options.UseInMemoryDatabase();
+
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 });
         }
     }

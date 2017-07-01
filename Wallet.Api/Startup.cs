@@ -50,7 +50,7 @@ namespace Wallet.Api
             services.Configure<ApiSettings>(Configuration);
 
             //Add EF
-            services.AddEF();
+            services.AddEF(Configuration);
 
             // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
             // note: the specified format code will format the version as "'v'major[.minor][-status]"

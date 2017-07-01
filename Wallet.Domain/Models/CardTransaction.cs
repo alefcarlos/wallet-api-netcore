@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Wallet.Domain.Models
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     using Domain.Core.Models;
 
     public class CardTransaction : ModelBase
@@ -17,10 +18,10 @@ namespace Wallet.Domain.Models
         [Required]
         public decimal Value { get; set; }
 
-        [Required]
+        [Required, MaxLength(50)]
         public string Description { get; set; }
 
-        [Required]
+        [Required, Column(TypeName = "datetime")]
         public DateTime Date { get; set; }
 
         public ECardTransactionType Type { get; set; } = ECardTransactionType.Purchase;

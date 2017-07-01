@@ -6,8 +6,8 @@ namespace Wallet.Domain.Core.Exceptions
     /// Default exception for Not Found record.
     /// It is used when a record wasn't found in the Databse
     /// </summary>
-    public class ThereIsNoLimitEnough : Exception
+    public class ThereIsNoEnoughLimit : Exception
     {
-        public ThereIsNoLimitEnough() : base("You dont have limit enough to make this purchase.") { }
+        public ThereIsNoEnoughLimit() : base("You dont have limit enough to make this purchase.") { }
     }
 }

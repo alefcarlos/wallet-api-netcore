@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Wallet.Domain.Models
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     using Domain.Core.Models;
 
     /// <summary>
@@ -37,7 +38,7 @@ namespace Wallet.Domain.Models
         /// <summary>
         /// Gets or sets the expiration date
         /// </summary>
-        [Required]
+        [Required, Column(TypeName = "datetime")]
         public DateTime ExpirationDate { get; set; }
 
         /// <summary>

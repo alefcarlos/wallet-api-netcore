@@ -17,6 +17,7 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<T>> GetAllAsync();
+
         /// <summary>
         /// Gets an specific record by id
         /// </summary>
@@ -53,18 +54,12 @@ namespace Wallet.Domain.Interfaces.Repositories
         IQueryable<T> Query();
 
         /// <summary>
-        /// This method is executed before AddAsyc()
-        /// </summary>
-        /// <returns>Returns an IQueryable instance</returns>
-
-        void BeforeAdd(T entity);
-        /// <summary>
         /// Verifies if an record exists by id
         /// </summary>
         /// <param name="id">record id</param>
         /// <returns>Returns true if the record existis, otherwise false</returns>
         bool Exists(int id);
 
-        int ExecuteQueryAsync(string sql, params object[] paramaters);
+        int ExecuteQuery(string sql, params object[] paramaters);
     }
 }

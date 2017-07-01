@@ -21,6 +21,7 @@ namespace Wallet.Api.Controllers.v1
     /// </summary>
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cards")]
+    [ValidateApiUser]
     public class CardTransactionController : ControllerBase<CardTransaction>
     {
         public CardTransactionController(ICardTrasactionRepository repo,
@@ -70,7 +71,7 @@ namespace Wallet.Api.Controllers.v1
             {
                 var entity = _mapper.Map<NewCardTransactionInfoVM, CardTransaction>(vm);
 
-                var result = await (_repository as ICardTrasactionRepository).AddNewTransactionAsync(entity);
+                await (_repository as ICardTrasactionRepository).AddNewTransactionAsync(entity);
 
                 return ReturnOk("Incluído com sucesso");
             }

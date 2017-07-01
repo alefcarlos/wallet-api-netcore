@@ -16,6 +16,6 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// </summary>
         /// <returns>Returns a transaction list.</returns>
         Task<IEnumerable<CardTransaction>> GetAllByCardIdAsync(int cardId);
-        Task<CardTransaction> AddNewTransactionAsync(CardTransaction entity);
+        Task AddNewTransactionAsync(CardTransaction entity);
     }
 }

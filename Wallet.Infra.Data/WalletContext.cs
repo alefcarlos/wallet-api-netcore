@@ -33,7 +33,7 @@ namespace Wallet.Infra.Data
         {
             //Card Number must be unique
             modelBuilder.Entity<Card>()
-                .HasIndex(c=> c.Number)
+                .HasIndex(c => c.Number)
                 .IsUnique();
         }
     }

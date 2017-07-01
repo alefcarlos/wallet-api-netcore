@@ -10,17 +10,25 @@ namespace Wallet.Infra.Data.Repositories
     using System.Linq;
     using Microsoft.EntityFrameworkCore;
     using Wallet.Domain.Core.Exceptions;
+    using Wallet.Domain.Interfaces.User;
 
     public class CardTransactionRepository : RepositoryBase<CardTransaction>,
                                                 ICardTrasactionRepository
     {
         private readonly ICardRepository _cardRepo;
+        private readonly IWalletUserRepository _userRepo;
+
+
+
         public CardTransactionRepository(WalletContext context,
                                             ILogger<CardTransactionRepository> logger,
-                                            ICardRepository cardRepo)
-            : base(context, logger)
+                                            ICardRepository cardRepo,
+                                            IWalletUserRepository userRepo,
+                                            IUserManagment userManagment)
+            : base(context, logger, userManagment)
         {
             _cardRepo = cardRepo;
+            _userRepo = userRepo;
         }
 
         public override void BeforeAdd(CardTransaction entity)
@@ -31,6 +39,12 @@ namespace Wallet.Infra.Data.Repositories
 
             //We can    
             base.BeforeAdd(entity);
+        }
+
+        public override void AfterAdd(CardTransaction entity)
+        {
+            //Subtracting the card limit
+            _cardRepo.SubtractLimit(entity.CardId, entity.Value);
         }
 
         private void ApplyCommomValidations(CardTransaction entity)
@@ -49,8 +63,15 @@ namespace Wallet.Infra.Data.Repositories
             return await Query().Where(x => x.CardId == cardId).ToListAsync();
         }
 
-        public async Task<CardTransaction> AddNewTransactionAsync(CardTransaction entity)
+        public async Task AddNewTransactionAsync(CardTransaction entity)
         {
+            //Get user info
+            var userEntity = await _userRepo.GetAsync(_userManagment.User.WalletUserId);
+
+            //If the value is greater than real limit
+            if (userEntity.RealLimit > 0 && userEntity.RealLimit < entity.Value)
+                throw new ThereIsNoEnoughLimit();
+
             //Get all cards with limit
             var allCards = await _cardRepo.GetAllAvailableLimitAsync();
 
@@ -60,10 +81,14 @@ namespace Wallet.Infra.Data.Repositories
 
             var entities = GenerateTransactions(allCards, entity);
 
-            throw new NotImplementedException();
+
+            foreach (var item in entities)
+            {
+                await AddAsync(item);
+            }
         }
 
-        private object GenerateTransactions(List<Card> availableCards, CardTransaction entity)
+        private List<CardTransaction> GenerateTransactions(List<Card> availableCards, CardTransaction entity)
         {
             var transactions = PickBestCards(availableCards, entity);
 
@@ -81,7 +106,7 @@ namespace Wallet.Infra.Data.Repositories
             var _transactionValue = 0m;
 
             if (availableCards.Sum(x => x.Limit) < _totalValue)
-                throw new ThereIsNoLimitEnough();
+                throw new ThereIsNoEnoughLimit();
 
             //If there is just a card and this limit is ok
             var _current = availableCards.First();
@@ -103,7 +128,7 @@ namespace Wallet.Infra.Data.Repositories
             foreach (var card in availableCards)
             {
                 _transactionValue = _totalValue <= card.Limit ? _totalValue : card.Limit;
-                _remaingValue = _totalValue -  _transactionValue;
+                _remaingValue = _totalValue - _transactionValue;
 
                 result.Add(new CardTransaction
                 {

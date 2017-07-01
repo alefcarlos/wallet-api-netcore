@@ -3,13 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 
 namespace Wallet.Infra.Data.Repositories
 {
     using Domain.Core.Models;
     using Domain.Interfaces.Repositories;
     using Wallet.Domain.Core.Exceptions;
+    using Wallet.Domain.Interfaces.User;
 
     /// <summary>
     /// Repository base for repository pattern
@@ -23,7 +24,12 @@ namespace Wallet.Infra.Data.Repositories
         /// It comes from DI
         /// </summary>
         protected readonly WalletContext dataContext;
-        // protected readonly IUserManagment _userManagment;
+
+        /// <summary>
+        /// Allow us to handle the logged user 
+        /// It comes from DI when the controller uses ValidateApiUserAttribute
+        /// </summary>
+        protected readonly IUserManagment _userManagment;
 
         /// <summary>
         /// logger instance
@@ -32,11 +38,11 @@ namespace Wallet.Infra.Data.Repositories
         protected readonly ILogger _logger;
 
         public RepositoryBase(WalletContext context,
-        //                          ,IUserManagment userManagment,
-                                 ILogger logger)
+                                 ILogger logger,
+                                IUserManagment userManagment)
         {
             dataContext = context;
-            // _userManagment = userManagment;
+            _userManagment = userManagment;
             _logger = logger;
         }
 
@@ -68,6 +74,8 @@ namespace Wallet.Infra.Data.Repositories
             Set().Add(entity);
 
             await SaveChangesAsync();
+
+            AfterAdd(entity);
         }
 
         public virtual async Task DeleteAsync(T entity)
@@ -114,15 +122,19 @@ namespace Wallet.Infra.Data.Repositories
             entity.UpdatedDate = DateTime.Now;
         }
 
+        public virtual void AfterAdd(T entity)
+        {
+            
+        }
+
         public virtual bool Exists(int ids) => GetAsync(ids) != null;
 
-        public int ExecuteQueryAsync(string sql, params object[] paramaters)
+        public int ExecuteQuery(string sql, params object[] paramaters)
         {
-            // var result = await dataContext.Database.ExecuteSqlCommand(sql, paramaters);
-            // await dataContext.SaveChangesAsync();
+            var result = dataContext.Database.ExecuteSqlCommand(sql, paramaters);
+            dataContext.SaveChanges();
 
-            // return result;
-            return -1;
+            return result;
         }
 
         private DbSet<T> Set() => dataContext.Set<T>();

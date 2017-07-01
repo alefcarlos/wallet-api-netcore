@@ -13,17 +13,13 @@ namespace Wallet.Infra.Data.Repositories
 
     public class WalletUserRepository : RepositoryBase<WalletUser>, IWalletUserRepository
     {
-        //Allow us to handle the logged user 
-        private readonly IUserManagment _userManagment;
-
         private readonly ICardRepository _cardRepository;
         public WalletUserRepository(WalletContext context,
                                     ILogger<WalletUserRepository> logger,
                                     IUserManagment userManagment,
                                     ICardRepository cardRepository)
-            : base(context, logger)
+            : base(context, logger, userManagment)
         {
-            _userManagment = userManagment;
             _cardRepository = cardRepository;
         }
 
@@ -31,7 +27,18 @@ namespace Wallet.Infra.Data.Repositories
         {
             entity.Code = Guid.NewGuid();
 
+            if (entity.RealLimit < 0)
+                throw new Exception("The real limit must be equals or greater than 0.");
+
             base.BeforeAdd(entity);
+        }
+
+        public override void BeforeUpdate(WalletUser entity)
+        {
+            if (entity.RealLimit < 0)
+                throw new Exception("The real limit must be equals or greater than 0.");
+
+            base.BeforeUpdate(entity);
         }
 
         /// <summary>

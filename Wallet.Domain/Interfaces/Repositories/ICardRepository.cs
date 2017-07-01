@@ -25,5 +25,7 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// </summary>
         /// <returns>Return the total limit for this user</returns>
         Task<decimal> GetSumLimit();
+
+        void SubtractLimit(int cardId, decimal value);
     }
 }

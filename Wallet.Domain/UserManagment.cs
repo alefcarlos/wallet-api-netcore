@@ -6,12 +6,18 @@ namespace Wallet.Domain
     public class UserManagment : IUserManagment
     {
 
-        private WalletUser _userField;
-        public WalletUser User => _userField;
+        private LoggedUser _userField;
+        public LoggedUser User => _userField;
         public bool IsLogged() => _userField != null;
         public void SetUser(WalletUser user)
         {
-            _userField = user;
+            _userField = new LoggedUser
+            {
+                WalletUserId = user.WalletUserId,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            };
         }
 
         public bool IsAdmin() => User.Role == EUserManagmentRole.Admin;
@@ -19,7 +25,7 @@ namespace Wallet.Domain
         public bool CanExecute(EUserManagmentRole requestedRole)
         {
             if (!IsLogged()) return false;
-            
+
             if (IsAdmin()) return true;
             //if (User.Role == EUserManagmentRole.ReadAndWrite) return true;
 
