@@ -22,6 +22,7 @@ namespace Wallet.Api
     using Wallet.Api.Models.VM;
     using Wallet.Api.Mapper.MapperProfiles;
     using Wallet.Api.Models;
+    using Wallet.Infra.Data;
 
     public class Startup
     {
@@ -90,7 +91,12 @@ namespace Wallet.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
+        public void Configure(IApplicationBuilder app,
+                                IHostingEnvironment env,
+                                ILoggerFactory loggerFactory,
+                                IApiVersionDescriptionProvider provider,
+                                WalletContext context)
+
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -115,6 +121,8 @@ namespace Wallet.Api
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                 }
             });
+
+            DbInitializer.Initialize(context);
         }
     }
 }
