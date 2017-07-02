@@ -35,6 +35,7 @@ namespace Wallet.Api.Mapper.Resolvers
                     ExpirationDate = c.ExpirationDate,
                     Limit = c.Limit,
                     AvailableLimit = c.AvailableLimit,
+                    DueDate = c.DueDate,
 
                     TransactionsInfo = c.Transactions.OrderByDescending(x => x.Date).Select(t => new CardTransactionVM
                     {

@@ -88,16 +88,31 @@ namespace Wallet.Infra.Data.Repositories
         }
 
         /// <summary>
-        /// Gets all user's cards with limit > 0
+        /// Gets all user's cards with AvailableLimit > 0
         /// </summary>
         /// <returns>Return a card list</returns>
         public async Task<List<Card>> GetAllAvailableLimitAsync()
         {
-            return await Query().Where(c => c.Limit >= 0)
+            var list = await Query().Where(c => c.AvailableLimit > 0)
                                 .AsNoTracking()
                                 .OrderByDescending(x => x.DueDate)
-                                .ThenBy(x => x.Limit)
+                                .ThenBy(x => x.AvailableLimit)
                                 .ToListAsync();
+
+
+            //Verify cards with DueDate less than today
+            var result = list.Where(x => x.DueDate < DateTime.Today.Day)
+                            .OrderBy(x => x.AvailableLimit).ToList();
+
+            //Put them in the begining of the list, because we they become the farthest ones
+            var pos = 0;
+            foreach (var item in result)
+            {
+                list.RemoveAll(x => x.CardId == item.CardId);
+                list.Insert(pos++, item);
+            }
+
+            return list;
         }
 
         /// <summary>

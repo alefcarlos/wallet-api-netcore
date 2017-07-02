@@ -21,6 +21,8 @@ namespace Wallet.Api.Models.VM
         public decimal Limit { get; set; }
         public decimal AvailableLimit { get; set; }
 
+        public int DueDate { get; set; }
+
 
         public List<CardTransactionVM> TransactionsInfo { get; set; } = new List<CardTransactionVM>();
     }
