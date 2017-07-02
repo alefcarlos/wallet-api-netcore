@@ -1,0 +1,319 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Wallet",
+		"_postman_id": "e1372359-75f1-4cdd-b33b-cfcf9f4ece20",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Card",
+			"description": "",
+			"item": [
+				{
+					"name": "Add Card",
+					"request": {
+						"url": "localhost:5000/api/v1/cards",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Number\": \"1234123412341235\",\n\t\"CCV\": \"123\",\n\t\"Limit\": 500,\n\t\"ExpirationDate\": \"2021-12-01\",\n\t\"DueDate\": 01\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get user Cards",
+					"request": {
+						"url": "localhost:5000/api/v1/cards/user",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"WalletUserId\" : 1,\n\t\"Number\": \"123456\",\n\t\"CCV\": 123,\n\t\"Limit\": 1000,\n\t\"ExpirationDate\": \"2017-01-01\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete a card",
+					"request": {
+						"url": "localhost:5000/api/v1/cards/3",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Cards",
+					"request": {
+						"url": "localhost:5000/api/v1/cards/",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "1FE3F423-956A-4B63-8543-FD7E5BB1D10A",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"WalletUserId\" : 1,\n\t\"Number\": \"123456\",\n\t\"CCV\": 123,\n\t\"Limit\": 1000,\n\t\"ExpirationDate\": \"2017-01-01\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"description": "",
+			"item": [
+				{
+					"name": "add purchase transaction",
+					"request": {
+						"url": "localhost:5000/api/v1/cards/transaction",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Description\": \"teste cartão menor\",\n\t\"Value\": 100\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get Card transactions",
+					"request": {
+						"url": "localhost:5000/api/v1/cards/1/transactions",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Description\": \"Almoço 2\",\n\t\"Value\": 55,\n\t\"Date\": \"2017-07-01T03:04:02.017Z\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "add release transaction",
+					"request": {
+						"url": "localhost:5000/api/v1/cards/transaction",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Description\": \"x\",\n\t\"Value\": 100,\n\t\"Type\": 1,\n\t\"CardId\": 60\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"description": "",
+			"item": [
+				{
+					"name": "addUser",
+					"request": {
+						"url": "localhost:5000/api/v1/Users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Name\": \"Alef\",\n\t\"Email\": \"alef.carlos@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get User info",
+					"request": {
+						"url": "localhost:5000/api/v1/Users/info",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Name\": \"Alef\",\n\t\"Email\": \"alef.carlos@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"url": "localhost:5000/api/v1/users/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Email\": \"alef.carlos@gmail.com\",\n\t\"Password\": \"123\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "update limt",
+					"request": {
+						"url": "localhost:5000/api/v1/Users/reallimit",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "0"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"url": "localhost:5000/api/v1/Users/",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "X-IDENTITY-USER",
+								"value": "1FE3F423-956A-4B63-8543-FD7E5BB1D10A",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Name\": \"Alef\",\n\t\"Email\": \"alef.carlos@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
