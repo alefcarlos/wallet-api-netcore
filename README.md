@@ -50,4 +50,16 @@ Open your browser e see the Swagger documentation at
 localhost:5000/swagger/
 ~~~~
 
+How to make a request ?
+
+Every request needs a header, unless /Login and /AddUser
+
+~~~
+X-IDENTITY-USER
+~~~~
+
+This header contains de Guid related to the user. We get the user using this.
+
+Every api saves the information based on this user.
+
 Enjoy the code !
