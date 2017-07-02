@@ -4,7 +4,7 @@
 
  1. You have to [install](https://www.microsoft.com/net/download/core) de .net Core SDK
 
- 2. You must configure your connection string at Wallet.Api/appsetings.json
+ 2. You must configure your connection string at `Wallet.Api/appsetings.json`
 
 ~~~~
 default value is Server=localhost;Database=Wallet;Trusted_Connection=True;MultipleActiveResultSets=true
@@ -41,27 +41,29 @@ dotnet run
 
 ### How to make a request ?
 
-Every request needs a header, unless POST api/v1/user/Login and POST api/v1/user
+Every request needs a header, unless `POST api/v1/users/Login` and `POST api/v1/users`
 
 ~~~
 X-IDENTITY-USER
 ~~~~
 
->This header contains de Guid related to and user. Every method saves the information based on this user.
+>This header contains de Guid related to an user. Every method saves the information based on this user.
+
+>We can change header's name at `Wallet.Apiapisettings.json`
 
 *When you make a login, you get a Guid in the response body*
 
-~~~~
+~~~json
 {
     "code": 200,
     "done": true,
     "data": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd"
 }
-~~~~
+~~~
 
-Every response has this pattern result
+Every response has this following pattern result:
 
-~~~~
+~~~~json
 {
     "code": int,
     "done": bool,
