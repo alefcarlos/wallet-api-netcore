@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.PlatformAbstractions;
+using NetEscapades.AspNetCore.SecurityHeaders;
 
 namespace Wallet.Api
 {
@@ -44,6 +45,9 @@ namespace Wallet.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Allow us do user custom header
+            services.AddCustomHeaders();
+
             // Required to use the Options<T> pattern
             services.AddOptions();
 
@@ -110,11 +114,13 @@ namespace Wallet.Api
                                 WalletContext context)
 
         {
-            // var policyCollection = new HeaderPolicyCollection()
-            //     .AddDefaultSecurityHeaders()
-            //     .RemoveServerHeader()
-            //     .AddCustomHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline'; default-src 'self';");
+            // Adding security headers
+            var policyCollection = new HeaderPolicyCollection()
+                .AddDefaultSecurityHeaders()
+                .RemoveServerHeader()
+                .AddCustomHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline'; default-src 'self';");
 
+            app.UseCustomHeadersMiddleware(policyCollection);
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
