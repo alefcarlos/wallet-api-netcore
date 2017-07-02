@@ -32,7 +32,8 @@ namespace Wallet.Api.Controllers
         /// </summary>
         /// <param name="data">Dados para retorna.</param>
         /// <returns>Retorna sucesso 200</returns>
-        public IActionResult ReturnOk<TData>(TData data){
+        [NonAction]
+        protected IActionResult ReturnOk<TData>(TData data){
             var result = new ApiResult<TData>{
                      Done = true,
                      Data = data,
@@ -47,7 +48,8 @@ namespace Wallet.Api.Controllers
         /// </summary>
         /// <param name="data">Dados para retorna.</param>
         /// <returns>Retorna erro 400</returns>
-        public IActionResult ReturnError<TData>(TData data){
+        [NonAction]
+        protected IActionResult ReturnError<TData>(TData data){
             var result = new ApiResult<TData>{
                      Done = false,
                      Data = data,
@@ -62,7 +64,8 @@ namespace Wallet.Api.Controllers
         /// </summary>
         /// <param name="data">Dados para retorna.</param>
         /// <returns>Retorna erro 404</returns>
-        public IActionResult ReturnNotFound<TData>(TData data){
+        [NonAction]
+        protected IActionResult ReturnNotFound<TData>(TData data){
             var result = new ApiResult<TData>{
                      Done = false,
                      Data = data,
@@ -76,7 +79,8 @@ namespace Wallet.Api.Controllers
         /// Método para abstrair retorno não autorizado 401
         /// </summary>
         /// <returns>Retorna erro 401</returns>
-        public IActionResult ReturnUnauthorized(){
+        [NonAction]
+        protected IActionResult ReturnUnauthorized(){
             return new StatusCodeResult((int)HttpStatusCode.Unauthorized);
         }
     }

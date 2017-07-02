@@ -47,24 +47,32 @@ namespace Wallet.Infra.Data.Repositories
             entity.WalletUserId = _userManagment.User.WalletUserId;
 
             //Available limit is equals to Limit
-            entity.AvailableLimit = entity.Limit; 
+            entity.AvailableLimit = entity.Limit;
 
             ApplyCommomValidations(entity);
-    
+
             base.BeforeAdd(entity);
         }
 
         public override void BeforeUpdate(Card entity)
         {
             ApplyCommomValidations(entity);
- 
+
             base.BeforeUpdate(entity);
         }
 
         public override void BeforeDelete(Card entity)
         {
-            //Validate if the owner from this card is the logged user
-            if(entity.WalletUserId != _userManagment.User.WalletUserId)
+            VerifyCardOwner(entity);
+        }
+
+        /// <summary>
+        /// Validate if the owner from this card is the logged user
+        /// </summary>
+        /// <param name="entity">Card model</param>
+        private void VerifyCardOwner(Card entity)
+        {
+            if (entity.WalletUserId != _userManagment.User.WalletUserId)
                 throw new NotAllowedException();
         }
 
@@ -99,7 +107,24 @@ namespace Wallet.Infra.Data.Repositories
         /// <param name="value">Value to subtract</param>
         public void SubtractLimit(int cardId, decimal value)
         {
-            var sql = "UPDATE Cards SET AvailableLimit = (AvailableLimit - {0}) WHERE CardId = {1}";
+            var sql = "UPDATE Cards SET UpdatedDate = GETDATE(), AvailableLimit = (AvailableLimit - {0}) WHERE CardId = {1}";
+
+            ExecuteQuery(sql, value, cardId);
+        }
+
+
+        /// <summary>
+        /// Releases a value from available card limit.
+        /// </summary>
+        /// <param name="cardId">Card id</param>
+        /// <param name="value">Value to release</param>
+        public void ReleaseLimit(int cardId, decimal value)
+        {
+            var entity = GetAsync(cardId).Result;
+
+            VerifyCardOwner(entity);
+
+            var sql = "UPDATE Cards SET  UpdatedDate = GETDATE(), AvailableLimit = (AvailableLimit + {0}) WHERE CardId = {1}";
 
             ExecuteQuery(sql, value, cardId);
         }

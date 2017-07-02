@@ -108,6 +108,8 @@ namespace Wallet.Infra.Data.Repositories
             BeforeUpdate(entity);
             Set().Update(entity);
             await SaveChangesAsync();
+
+            AfterUpdate(entity);
         }
 
         public IQueryable<T> Query() => Set().AsQueryable();
@@ -125,15 +127,18 @@ namespace Wallet.Infra.Data.Repositories
 
         public virtual void AfterAdd(T entity)
         {
-            
+
+        }
+
+        public virtual void AfterUpdate(T entity)
+        {
+
         }
 
         public virtual void BeforeDelete(T entity)
         {
 
         }
-
-        public virtual bool Exists(int ids) => GetAsync(ids) != null;
 
         public int ExecuteQuery(string sql, params object[] paramaters)
         {

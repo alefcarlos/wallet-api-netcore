@@ -37,7 +37,7 @@ namespace Wallet.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Gets all cards in db
+        /// Gets all cards in db.
         /// It requires admin permission.
         /// </summary>
         /// <returns>Returns all users.</returns>
@@ -66,7 +66,14 @@ namespace Wallet.Api.Controllers.v1
             {
                 var entity = await _repository.GetAsync(id);
 
+                if (entity.WalletUserId != _userManagment.User.WalletUserId)
+                    throw new NotAllowedException();
+
                 return ReturnOk(_mapper.Map<Card, CardVM>(entity));
+            }
+            catch (NotAllowedException)
+            {
+                return ReturnUnauthorized();
             }
             catch (RecordNotFoundException ex)
             {

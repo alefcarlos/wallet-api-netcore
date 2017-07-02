@@ -53,13 +53,6 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// <returns>Returns an IQueryable instance</returns>
         IQueryable<T> Query();
 
-        /// <summary>
-        /// Verifies if an record exists by id
-        /// </summary>
-        /// <param name="id">record id</param>
-        /// <returns>Returns true if the record existis, otherwise false</returns>
-        bool Exists(int id);
-
         int ExecuteQuery(string sql, params object[] paramaters);
     }
 }

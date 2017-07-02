@@ -43,8 +43,18 @@ namespace Wallet.Infra.Data.Repositories
 
         public override void AfterAdd(CardTransaction entity)
         {
-            //Subtracting the card limit
-            _cardRepo.SubtractLimit(entity.CardId, entity.Value);
+            switch (entity.Type)
+            {
+                //Subtracting the card limit
+                case ECardTransactionType.Purchase:
+                    _cardRepo.SubtractLimit(entity.CardId, entity.Value);
+                    break;
+
+                //Releasing the card limit
+                case ECardTransactionType.ReleaseCredit:
+                    _cardRepo.ReleaseLimit(entity.CardId, entity.Value);
+                    break;
+            }
         }
 
         private void ApplyCommomValidations(CardTransaction entity)
@@ -77,7 +87,40 @@ namespace Wallet.Infra.Data.Repositories
                     return;
 
                 case ECardTransactionType.ReleaseCredit:
+                    await ReleaseAvailableLimit(entity);
                     return;
+            }
+        }
+
+        /// <summary>
+        /// Create transactios that releases credit limit.
+        /// </summary>
+        /// <param name="entity">Transaction values</param>
+        private async Task ReleaseAvailableLimit(CardTransaction entity)
+        {
+            //Validations
+            if (entity.CardId <= 0)
+                throw new Exception("You must inform a CardId");
+
+            if (entity.Value <= 0)
+                throw new Exception($"You value must be greater than {entity.Value.ToString("C")}");
+
+            var card = await _cardRepo.GetAsync(entity.CardId);
+
+            if ((card.AvailableLimit + entity.Value) > card.Limit)
+                throw new Exception($"You must release at maximum {card.Limit.ToString("C")}");
+
+            dataContext.Database.BeginTransaction();
+            try
+            {
+                entity.Description = "Releasing credit";
+                await AddAsync(entity);
+                dataContext.Database.CommitTransaction();
+            }
+            catch
+            {
+                dataContext.Database.RollbackTransaction();
+                throw;
             }
         }
 
@@ -173,7 +216,7 @@ namespace Wallet.Infra.Data.Repositories
                     break;
             }
 
-            returnResult:
+        returnResult:
             return result;
         }
     }

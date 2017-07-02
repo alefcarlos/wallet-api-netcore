@@ -12,6 +12,8 @@ namespace Wallet.Api.Models.VM
         [Required]
         public string Description { get; set; }
 
+        public int CardId {get;set;}
+
         public ECardTransactionType Type { get; set; } = ECardTransactionType.Purchase;
     }
 }

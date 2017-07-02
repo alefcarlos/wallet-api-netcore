@@ -59,7 +59,7 @@ namespace Wallet.Api.Controllers.v1
 
         /// <summary>
         /// Adds a card transaction.
-        /// Inform Type = 1 to release certain amount from available limit
+        /// To release limit: Inform a cardid and type:1
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost("transaction")]
@@ -75,6 +75,10 @@ namespace Wallet.Api.Controllers.v1
                 await (_repository as ICardTrasactionRepository).AddNewTransactionAsync(entity);
 
                 return ReturnOk("Incluído com sucesso");
+            }
+            catch (NotAllowedException)
+            {
+                return ReturnUnauthorized();
             }
             catch (Exception ex)
             {

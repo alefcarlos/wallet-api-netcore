@@ -37,5 +37,12 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// <param name="cardId">Card id</param>
         /// <param name="value">Value to subtract</param>
         void SubtractLimit(int cardId, decimal value);
+
+        /// <summary>
+        /// Releases a value from available card limit.
+        /// </summary>
+        /// <param name="cardId">Card id</param>
+        /// <param name="value">Value to release</param>
+        void ReleaseLimit(int cardId, decimal value);
     }
 }
