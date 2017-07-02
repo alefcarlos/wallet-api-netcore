@@ -58,7 +58,7 @@ namespace Wallet.Api.Controllers
         }
 
         /// <summary>
-        /// Método para abstrair retornar error 404
+        /// Método para abstrair retorno error 404
         /// </summary>
         /// <param name="data">Dados para retorna.</param>
         /// <returns>Retorna erro 404</returns>
@@ -72,5 +72,12 @@ namespace Wallet.Api.Controllers
             return NotFound(result);
         }
 
+        /// <summary>
+        /// Método para abstrair retorno não autorizado 401
+        /// </summary>
+        /// <returns>Retorna erro 401</returns>
+        public IActionResult ReturnUnauthorized(){
+            return new StatusCodeResult((int)HttpStatusCode.Unauthorized);
+        }
     }
 }

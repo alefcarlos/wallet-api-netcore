@@ -53,6 +53,12 @@ namespace Wallet.Domain.Models
         [Required]
         public decimal Limit { get; set; }
 
+        /// <summary>
+        /// Gets or sets the available limit to make purchase
+        /// It can not surpass maximum limit.
+        /// </summary>
+        public decimal AvailableLimit { get; set; }
+
         public IEnumerable<CardTransaction> Transactions { get; set; }
     }
 }

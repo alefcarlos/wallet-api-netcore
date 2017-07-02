@@ -19,7 +19,9 @@ namespace Wallet.Api.Models.VM
         public string CCV { get; set; }
 
         public decimal Limit { get; set; }
+        public decimal AvailableLimit { get; set; }
 
-        public List<CardTransactionVM> TransactionsInfo {get;set;} = new List<CardTransactionVM>();
+
+        public List<CardTransactionVM> TransactionsInfo { get; set; } = new List<CardTransactionVM>();
     }
 }

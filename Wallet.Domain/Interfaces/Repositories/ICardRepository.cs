@@ -18,6 +18,11 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// </summary>
         /// <returns>Returns a card list.</returns>
         Task<List<Card>> GetByLoggedUser();
+
+        /// <summary>
+        /// Gets all user's cards with limit > 0
+        /// </summary>
+        /// <returns>Return a card list</returns>
         Task<List<Card>> GetAllAvailableLimitAsync();
 
         /// <summary>
@@ -26,6 +31,11 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// <returns>Return the total limit for this user</returns>
         Task<decimal> GetSumLimit();
 
+        /// <summary>
+        /// Subtract a value from available card limit.
+        /// </summary>
+        /// <param name="cardId">Card id</param>
+        /// <param name="value">Value to subtract</param>
         void SubtractLimit(int cardId, decimal value);
     }
 }

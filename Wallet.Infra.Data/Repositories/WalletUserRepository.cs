@@ -26,7 +26,7 @@ namespace Wallet.Infra.Data.Repositories
         public override void BeforeAdd(WalletUser entity)
         {
             entity.Code = Guid.NewGuid();
-
+            
             if (entity.RealLimit < 0)
                 throw new Exception("The real limit must be equals or greater than 0.");
 

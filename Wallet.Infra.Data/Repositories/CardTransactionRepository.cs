@@ -63,7 +63,29 @@ namespace Wallet.Infra.Data.Repositories
             return await Query().Where(x => x.CardId == cardId).ToListAsync();
         }
 
+        /// <summary>
+        /// Adds a new card transaction
+        /// </summary>
+        /// <param name="entity">Transactions info</param>
+        /// <returns></returns>
         public async Task AddNewTransactionAsync(CardTransaction entity)
+        {
+            switch (entity.Type)
+            {
+                case ECardTransactionType.Purchase:
+                    await AddPurchaseTransaction(entity);
+                    return;
+
+                case ECardTransactionType.ReleaseCredit:
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// Create transactios based on value.
+        /// </summary>
+        /// <param name="entity">Transaction values</param>
+        private async Task AddPurchaseTransaction(CardTransaction entity)
         {
             //Get user info
             var userEntity = await _userRepo.GetAsync(_userManagment.User.WalletUserId);
@@ -79,25 +101,32 @@ namespace Wallet.Infra.Data.Repositories
             if (!allCards.Any())
                 throw new ThereIsNoCardAvailableException();
 
-            var entities = GenerateTransactions(allCards, entity);
+            var entities = PickBestCards(allCards, entity);
 
-
-            foreach (var item in entities)
+            try
             {
-                await AddAsync(item);
+                dataContext.Database.BeginTransaction();
+
+                foreach (var item in entities)
+                {
+                    await AddAsync(item);
+                }
+
+                dataContext.Database.CommitTransaction();
+            }
+            catch
+            {
+                dataContext.Database.RollbackTransaction();
             }
         }
 
-        private List<CardTransaction> GenerateTransactions(List<Card> availableCards, CardTransaction entity)
-        {
-            var transactions = PickBestCards(availableCards, entity);
 
-            //There is no card available
-            if (!transactions.Any())
-                throw new ThereIsNoCardAvailableException();
-
-            return transactions;
-        }
+        /// <summary>
+        /// This method is used to select the bests cards based on transaction value and user available limits
+        /// </summary>
+        /// <param name="availableCards">Card list with limit > 0</param>
+        /// <param name="entity">Transaction infos</param>
+        /// <returns>Returns all transaction created for this value</returns>
         private List<CardTransaction> PickBestCards(List<Card> availableCards, CardTransaction entity)
         {
             var result = new List<CardTransaction>();
@@ -105,7 +134,7 @@ namespace Wallet.Infra.Data.Repositories
             var _remaingValue = 0m;
             var _transactionValue = 0m;
 
-            if (availableCards.Sum(x => x.Limit) < _totalValue)
+            if (availableCards.Sum(x => x.AvailableLimit) < _totalValue)
                 throw new ThereIsNoEnoughLimit();
 
             //If there is just a card and this limit is ok
@@ -123,8 +152,7 @@ namespace Wallet.Infra.Data.Repositories
                 goto returnResult;
             }
 
-
-            // Iterate until de total value becomes 0.
+            // Iterating until de total value becomes 0.
             foreach (var card in availableCards)
             {
                 _transactionValue = _totalValue <= card.Limit ? _totalValue : card.Limit;
@@ -145,7 +173,7 @@ namespace Wallet.Infra.Data.Repositories
                     break;
             }
 
-        returnResult:
+            returnResult:
             return result;
         }
     }

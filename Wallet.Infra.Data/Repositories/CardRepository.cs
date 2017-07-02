@@ -10,6 +10,7 @@ namespace Wallet.Infra.Data.Repositories
     using Domain.Models;
     using Domain.Interfaces.Repositories;
     using Wallet.Domain.Interfaces.User;
+    using Wallet.Domain.Core.Exceptions;
 
     public class CardRepository : RepositoryBase<Card>, ICardRepository
     {
@@ -45,19 +46,26 @@ namespace Wallet.Infra.Data.Repositories
             //Adds owner user.
             entity.WalletUserId = _userManagment.User.WalletUserId;
 
-            ApplyCommomValidations(entity);
+            //Available limit is equals to Limit
+            entity.AvailableLimit = entity.Limit; 
 
-            //We can    
+            ApplyCommomValidations(entity);
+    
             base.BeforeAdd(entity);
         }
-
 
         public override void BeforeUpdate(Card entity)
         {
             ApplyCommomValidations(entity);
-
-            //We can    
+ 
             base.BeforeUpdate(entity);
+        }
+
+        public override void BeforeDelete(Card entity)
+        {
+            //Validate if the owner from this card is the logged user
+            if(entity.WalletUserId != _userManagment.User.WalletUserId)
+                throw new NotAllowedException();
         }
 
         private void ApplyCommomValidations(Card entity)
@@ -71,6 +79,10 @@ namespace Wallet.Infra.Data.Repositories
                 throw new Exception("The expiration date must be greater than today!");
         }
 
+        /// <summary>
+        /// Gets all user's cards with limit > 0
+        /// </summary>
+        /// <returns>Return a card list</returns>
         public async Task<List<Card>> GetAllAvailableLimitAsync()
         {
             return await Query().Where(c => c.Limit >= 0)
@@ -80,9 +92,14 @@ namespace Wallet.Infra.Data.Repositories
                                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Subtract a value from available card limit.
+        /// </summary>
+        /// <param name="cardId">Card id</param>
+        /// <param name="value">Value to subtract</param>
         public void SubtractLimit(int cardId, decimal value)
         {
-            var sql = "UPDATE Cards SET Limit = (Limit - {0}) WHERE CardId = {1}";
+            var sql = "UPDATE Cards SET AvailableLimit = (AvailableLimit - {0}) WHERE CardId = {1}";
 
             ExecuteQuery(sql, value, cardId);
         }

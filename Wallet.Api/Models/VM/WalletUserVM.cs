@@ -16,7 +16,9 @@ namespace Wallet.Api.Models.VM
         MaxLength(100)]
         public string Email { get; set; }
 
-        public decimal RealLimit { get; set; } = 0;
+        public decimal RealLimit { get; set; }
+
+        public decimal AvailableLimit  => CardsInfo.Sum(x => x.AvailableLimit);
 
         public decimal CardsLimit => CardsInfo.Sum(x => x.Limit);
 

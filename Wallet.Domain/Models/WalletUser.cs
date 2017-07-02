@@ -41,7 +41,7 @@ namespace Wallet.Domain.Models
         /// Gets or sets the real limit, it was set by user.
         /// It can not surpass maximum limit.
         /// </summary>
-        public decimal RealLimit { get; set; } = 0;
+        public decimal RealLimit { get; set; }
 
         /// <summary>
         /// Gets or sets User role

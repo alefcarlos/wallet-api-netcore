@@ -59,6 +59,7 @@ namespace Wallet.Api.Controllers.v1
 
         /// <summary>
         /// Adds a card transaction.
+        /// Inform Type = 1 to release certain amount from available limit
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost("transaction")]

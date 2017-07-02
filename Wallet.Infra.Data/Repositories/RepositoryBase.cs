@@ -80,6 +80,8 @@ namespace Wallet.Infra.Data.Repositories
 
         public virtual async Task DeleteAsync(T entity)
         {
+            BeforeDelete(entity);
+
             Set().Remove(entity);
             await SaveChangesAsync();
         }
@@ -93,8 +95,7 @@ namespace Wallet.Infra.Data.Repositories
                 if (entity == null)
                     throw new RecordNotFoundException();
 
-                Set().Remove(entity);
-                await SaveChangesAsync();
+                await DeleteAsync(entity);
             }
             catch
             {
@@ -125,6 +126,11 @@ namespace Wallet.Infra.Data.Repositories
         public virtual void AfterAdd(T entity)
         {
             
+        }
+
+        public virtual void BeforeDelete(T entity)
+        {
+
         }
 
         public virtual bool Exists(int ids) => GetAsync(ids) != null;

@@ -16,6 +16,12 @@ namespace Wallet.Domain.Interfaces.Repositories
         /// </summary>
         /// <returns>Returns a transaction list.</returns>
         Task<IEnumerable<CardTransaction>> GetAllByCardIdAsync(int cardId);
+
+        /// <summary>
+        /// Adds a new card transaction
+        /// </summary>
+        /// <param name="entity">Transactions info</param>
+        /// <returns></returns>
         Task AddNewTransactionAsync(CardTransaction entity);
     }
 }
