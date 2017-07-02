@@ -8,6 +8,10 @@ namespace Wallet.Api.Mapper.Resolvers
     using Wallet.Api.Models.VM;
     using Wallet.Domain.Models;
 
+    /// <summary>
+    /// Custom type resolver for AutoMapper
+    /// It converts user info(Cards, CardsTransactions) into VMs.
+    /// </summary>
     public class WalletUserInfoResolver : ITypeConverter<WalletUser, WalletUserVM>
     {
         public WalletUserVM Convert(WalletUser source, WalletUserVM destination, ResolutionContext context)
@@ -21,25 +25,27 @@ namespace Wallet.Api.Mapper.Resolvers
             };
 
             // Cards info
-            // var cardsInfo = _mapper.Map<IEnumerable<Card>, IEnumerable<CardVM>>(source.Cards);
-            info.CardsInfo.AddRange(source.Cards.OrderByDescending(x => x.ExpirationDate).Select(c => new CardVM
+            if (source.Cards != null)
             {
-                CardId = c.CardId,
-                Number = c.Number,
-                CCV = c.CCV,
-                ExpirationDate = c.ExpirationDate,
-                Limit = c.Limit,
-                AvailableLimit = c.AvailableLimit,
-  
-                TransactionsInfo = c.Transactions.OrderByDescending(x => x.Date).Select(t => new CardTransactionVM
+                info.CardsInfo.AddRange(source.Cards.OrderByDescending(x => x.ExpirationDate).Select(c => new CardVM
                 {
-                    CardTransactionId = t.CardTransactionId,
-                    Date = t.Date,
-                    Description = t.Description,
-                    Value = t.Value,
-                    Type = t.Type
-                }).ToList()
-            }));
+                    CardId = c.CardId,
+                    Number = c.Number,
+                    CCV = c.CCV,
+                    ExpirationDate = c.ExpirationDate,
+                    Limit = c.Limit,
+                    AvailableLimit = c.AvailableLimit,
+
+                    TransactionsInfo = c.Transactions.OrderByDescending(x => x.Date).Select(t => new CardTransactionVM
+                    {
+                        CardTransactionId = t.CardTransactionId,
+                        Date = t.Date,
+                        Description = t.Description,
+                        Value = t.Value,
+                        Type = t.Type
+                    }).ToList()
+                }));
+            }
 
             return info;
         }

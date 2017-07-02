@@ -45,10 +45,6 @@ namespace Wallet.Api.Controllers.v1
         [ValidateApiUserRole(EUserManagmentRole.Admin)]
         public async Task<IActionResult> Get()
         {
-            _logger.LogInformation("teste");
-            _logger.LogDebug("teste");
-            _logger.LogError("teste");
-
             var list = await _repository.GetAllAsync();
 
             return ReturnOk(_mapper.Map<IEnumerable<WalletUser>, IEnumerable<WalletUserVM>>(list));
@@ -101,42 +97,6 @@ namespace Wallet.Api.Controllers.v1
             }
 
         }
-
-        // // PUT api/values/5
-        // // [HttpPut("{id}")]
-        // // public virtual async Task<IActionResult> Put(int id, [FromBody]T entity)
-        // // {
-        // //     try
-        // //     {
-        // //         await _repository.UpdateAsync(entity);
-
-        // //         return ReturnOk("Alterado com sucesso");
-        // //     }
-        // //     catch (Exception ex)
-        // //     {
-        // //         return ReturnError(ex.Message);
-        // //     }
-        // // }
-
-        // DELETE api/values/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> Delete(int id)
-        // {
-        //     try
-        //     {
-        //         await _repository.DeleteAsync(id);
-
-        //         return ReturnOk("Deletado com sucesso");
-        //     }
-        //     catch (RecordNotFoundException ex)
-        //     {
-        //         return ReturnNotFound(ex.Message);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return ReturnError(ex.Message);
-        //     }
-        // }
 
         /// <summary>
         /// User login
