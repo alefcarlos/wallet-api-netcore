@@ -8,6 +8,6 @@ namespace Wallet.Domain.Core.Exceptions
     /// </summary>
     public class ThereIsNoEnoughLimit : Exception
     {
-        public ThereIsNoEnoughLimit() : base("You dont have limit enough to make this purchase.") { }
+        public ThereIsNoEnoughLimit() : base("You dont have enough limit to make this purchase.") { }
     }
 }

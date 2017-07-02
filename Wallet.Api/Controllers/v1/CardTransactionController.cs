@@ -22,6 +22,10 @@ namespace Wallet.Api.Controllers.v1
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cards")]
     [ValidateApiUser]
+    [ProducesResponseType(typeof(ApiResult<string>), 401)]
+    [ProducesResponseType(typeof(ApiResult<string>), 400)]
+    [ProducesResponseType(typeof(ApiResult<string>), 404)]
+    [ProducesResponseType(typeof(ApiResult<string>), 200)]
     public class CardTransactionController : ControllerBase<CardTransaction>
     {
         public CardTransactionController(ICardTrasactionRepository repo,
@@ -37,8 +41,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns all users.</returns>
         [HttpGet("{cardId:int}/transactions")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<CardTransactionVM>>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
-        [ProducesResponseType(typeof(ApiResult<string>), 404)]
         public async Task<IActionResult> Get(int cardId)
         {
             try
@@ -65,7 +67,6 @@ namespace Wallet.Api.Controllers.v1
         [HttpPost("transaction")]
         [ValidateModel]
         [ProducesResponseType(typeof(ApiResult<string>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         public async Task<IActionResult> Post([FromBody]NewCardTransactionInfoVM vm)
         {
             try

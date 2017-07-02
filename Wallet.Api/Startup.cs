@@ -53,6 +53,18 @@ namespace Wallet.Api
             //Add EF
             services.AddEF(Configuration);
 
+            //Habilitar CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                });
+            });
+
             // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
             // note: the specified format code will format the version as "'v'major[.minor][-status]"
             services.AddMvcCore().AddVersionedApiExplorer(o => o.GroupNameFormat = "'v'VVV");
@@ -98,6 +110,12 @@ namespace Wallet.Api
                                 WalletContext context)
 
         {
+            // var policyCollection = new HeaderPolicyCollection()
+            //     .AddDefaultSecurityHeaders()
+            //     .RemoveServerHeader()
+            //     .AddCustomHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline'; default-src 'self';");
+
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 

@@ -1,65 +1,72 @@
 # Wallet API
 
-How to run ?
+### How to run
 
-You have to install de .net Core SDK
+ 1. You have to [install](https://www.microsoft.com/net/download/core) de .net Core SDK
 
-~~~~
-https://www.microsoft.com/net/download/core
-~~~~
-
-You mus configure your connection string at Wallet.Api.appsetings.json
+ 2. You must configure your connection string at Wallet.Api/appsetings.json
 
 ~~~~
 default value is Server=localhost;Database=Wallet;Trusted_Connection=True;MultipleActiveResultSets=true
 ~~~~
 
-Open the api folder
+ 3. Open the api folder
 
-~~~
+~~~cmd
 cd Wallet.Api
 ~~~~
 
-First, you need to restore the packages
+ 4. First, you need to restore the packages
 
 ~~~~
 dotnet restore
 ~~~~
 
-After that, compile ir
+ 5. After that, compile it
 
 ~~~~
 dotnet build
 ~~~~
 
-...And finally: run !!
+ 6. ...And finally: run !!
 
 ~~~~
 dotnet run
 ~~~~
 
-The ef core will create a blank database for you called Wallet and a local server will be available to make requests
+>The ef core will create a blank database for you, called Wallet, and a [local server](http://localhost:5000) will be available to make requests
 
-~~~~
-default: localhost:5000
-~~~~
+>See the documentation at [here](http://localhost:5000/swagger).
 
-Open your browser e see the Swagger documentation at
 
-~~~
-localhost:5000/swagger/
-~~~~
+### How to make a request ?
 
-How to make a request ?
-
-Every request needs a header, unless /Login and /AddUser
+Every request needs a header, unless POST api/v1/user/Login and POST api/v1/user
 
 ~~~
 X-IDENTITY-USER
 ~~~~
 
-This header contains de Guid related to the user. We get the user using this.
+>This header contains de Guid related to and user. Every method saves the information based on this user.
 
-Every api saves the information based on this user.
+*When you make a login, you get a Guid in the response body*
+
+~~~~
+{
+    "code": 200,
+    "done": true,
+    "data": "bc1cb656-a4d9-4f72-a8c7-779fdaf62edd"
+}
+~~~~
+
+Every response has this pattern result
+
+~~~~
+{
+    "code": int,
+    "done": bool,
+    "data": object
+}
+~~~~
 
 Enjoy the code !

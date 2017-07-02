@@ -23,6 +23,10 @@ namespace Wallet.Api.Controllers.v1
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cards")]
     [ValidateApiUser]
+    [ProducesResponseType(typeof(ApiResult<string>), 401)]
+    [ProducesResponseType(typeof(ApiResult<string>), 400)]
+    [ProducesResponseType(typeof(ApiResult<string>), 404)]
+    [ProducesResponseType(typeof(ApiResult<string>), 200)]
     public class CardController : ControllerBase<Card>
     {
         private readonly IUserManagment _userManagment;
@@ -43,7 +47,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns all users.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<CardVM>>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ValidateApiUserRole(EUserManagmentRole.Admin)]
         public async Task<IActionResult> Get()
         {
@@ -57,9 +60,6 @@ namespace Wallet.Api.Controllers.v1
         /// </summary>
         /// <returns>Returns an specific card</returns>
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(ApiResult<CardVM>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
-        [ProducesResponseType(typeof(ApiResult<string>), 404)]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -91,8 +91,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost]
         [ValidateModel]
-        [ProducesResponseType(typeof(ApiResult<string>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         public async Task<IActionResult> Post([FromBody]Card entity)
         {
             try
@@ -113,9 +111,6 @@ namespace Wallet.Api.Controllers.v1
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpGet("user")]
-        [ProducesResponseType(typeof(ApiResult<CardVM>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
-        [ProducesResponseType(typeof(ApiResult<string>), 404)]
         public async Task<IActionResult> GetByUserId()
         {
             try
@@ -139,9 +134,6 @@ namespace Wallet.Api.Controllers.v1
         /// </summary>
         /// <returns>Returns Ok/Error.</returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(ApiResult<string>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
-        [ProducesResponseType(typeof(ApiResult<string>), 404)]
         public async Task<IActionResult> Delete(int id)
         {
             try

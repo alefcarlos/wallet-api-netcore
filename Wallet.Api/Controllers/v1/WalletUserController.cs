@@ -21,6 +21,10 @@ namespace Wallet.Api.Controllers.v1
     /// </summary>
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/users")]
+    [ProducesResponseType(typeof(ApiResult<string>), 401)]
+    [ProducesResponseType(typeof(ApiResult<string>), 400)]
+    [ProducesResponseType(typeof(ApiResult<string>), 404)]
+    [ProducesResponseType(typeof(ApiResult<string>), 200)]
     public class WalletUserController : ControllerBase<WalletUser>
     {
         public WalletUserController(IWalletUserRepository repo,
@@ -37,7 +41,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns all users.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<WalletUserVM>>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ValidateApiUser]
         [ValidateApiUserRole(EUserManagmentRole.Admin)]
         public async Task<IActionResult> Get()
@@ -57,8 +60,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns an specific user.</returns>
         [HttpGet("info")]
         [ProducesResponseType(typeof(ApiResult<WalletUserVM>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
-        [ProducesResponseType(typeof(ApiResult<string>), 404)]
         [ValidateApiUser]
         public async Task<IActionResult> GetInfo()
         {
@@ -86,8 +87,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns Ok/Error.</returns>
         [HttpPost]
         [ValidateModel]
-        [ProducesResponseType(typeof(ApiResult<string>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         public async Task<IActionResult> Post([FromBody]WalletUser entity)
         {
             try
@@ -146,7 +145,6 @@ namespace Wallet.Api.Controllers.v1
         [HttpPost("login")]
         [ValidateModel]
         [ProducesResponseType(typeof(ApiResult<Guid>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         public async Task<IActionResult> Login([FromBody]LoginVM login)
         {
             try
@@ -171,8 +169,6 @@ namespace Wallet.Api.Controllers.v1
         /// <returns>Returns</returns>
         [HttpPut("reallimit")]
         [ValidateModel]
-        [ProducesResponseType(typeof(ApiResult<string>), 200)]
-        [ProducesResponseType(typeof(ApiResult<string>), 400)]
         [ValidateApiUser]
         public async Task<IActionResult> UpdatedRealLimit([FromBody]decimal value)
         {
